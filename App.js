@@ -32,26 +32,15 @@ function LoggedIn() {
   };
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: {backgroundColor: '#ffffff'},
+        }}>
         <Tab.Screen
           name="Home"
           component={Home}
           options={{
-            title: 'HOME',
-            headerRight: () => (
-              <TouchableOpacity onPress={logout}>
-                <Text
-                  style={{
-                    marginRight: 20,
-                    fontSize: 16,
-                    color: 'red',
-                    fontWeight: 'bold',
-                  }}>
-                  로그아웃
-                </Text>
-              </TouchableOpacity>
-            ),
-            //headerShown: false,
+            headerShown: false,
           }}
         />
         <Tab.Screen
@@ -65,7 +54,7 @@ function LoggedIn() {
           name="Profile"
           component={Profile}
           options={{
-            title: 'Pro',
+            title: 'PROFILE',
             headerRight: () => (
               <TouchableOpacity onPress={logout}>
                 <Text
@@ -75,7 +64,7 @@ function LoggedIn() {
                     color: 'red',
                     fontWeight: 'bold',
                   }}>
-                  settings
+                  LOGOUT
                 </Text>
               </TouchableOpacity>
             ),
