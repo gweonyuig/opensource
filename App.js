@@ -37,7 +37,7 @@ function LoggedIn() {
           tabBarStyle: {backgroundColor: '#ffffff'},
         }}>
         <Tab.Screen
-          name="Home"
+          name="Camera"
           component={Home}
           options={{
             headerShown: false,

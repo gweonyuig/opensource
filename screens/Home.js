@@ -4,15 +4,48 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
+
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
+
 const Home = () => {
   const devices = useCameraDevices();
   const device = devices.back;
   const camera = useRef(null);
   const [imageData, setImageData] = useState('');
   const [takePhotoClicked, setTakePhotoClicked] = useState(false);
+
+  async function hasAndroidPermission() {
+    const permission =
+      Platform.Version >= 33
+        ? PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES
+        : PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE;
+
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
+
+  const saveToAlbum = async () => {
+    if (imageData !== '') {
+      const album = 'Opensource'; // 저장할 앨범의 이름을 설정합니다.
+      try {
+        await CameraRoll.save(imageData, {album});
+        console.log('이미지가 앨범에 저장되었습니다.');
+      } catch (error) {
+        console.log('앨범에 저장 중에 오류가 발생했습니다:', error);
+      }
+    }
+  };
+
   useEffect(() => {
     checkPermission();
   }, []);
@@ -25,11 +58,15 @@ const Home = () => {
   if (device == null) return <ActivityIndicator />;
 
   const takePicture = async () => {
-    if (camera != null) {
-      const photo = await camera.current.takePhoto();
-      setImageData(photo.path);
-      setTakePhotoClicked(false);
-      console.log(photo.path);
+    if (camera.current != null) {
+      try {
+        const photo = await camera.current.takePhoto();
+        setImageData(photo.path);
+        setTakePhotoClicked(false);
+        console.log(photo.path);
+      } catch (error) {
+        console.log('카메라가 아직 준비되지 않았습니다:', error);
+      }
     }
   };
   return (
@@ -77,6 +114,7 @@ const Home = () => {
               marginTop: 5,
             }}
             onPress={() => {
+              saveToAlbum();
               setTakePhotoClicked(true);
             }}>
             <Text>Save Photo</Text>
