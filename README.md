@@ -12,6 +12,7 @@
 - splashScreen
 
   - 앱 실행시 로딩화면
+  - https://ingg.dev/rn-splash/
 
 - react-native-vision-camera
 
@@ -20,20 +21,16 @@
 
 - firebase
 
-  - Authentication 사용자 인증 및 관리 사용
+  - Authentication 사용자 인증 및 관리 사용<br> -로그인 및 회원가입 기능 구현
 
-  * 로그인 및 회원가입 기능 구현
-
-  - Storage
-
-  * 사용자 사진 저장
+  - Storage<br> -사용자 사진 저장
 
 - googleMaps API
-  - qweradg
+  - 컴포넌트에 google mpas를 불러와 출력
+  - https://github.com/react-native-maps/react-native-maps
 
 ## 개발 환경
 
 - **IDE** : vscode
 - `firebase`
 - `react-native cli`
-- `googleMaps API`
