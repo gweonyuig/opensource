@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -19,6 +20,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import {auth} from './src/firebase';
+import SplashScreen from 'react-native-splash-screen';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,11 +32,14 @@ function LoggedIn() {
       console.error(e);
     }
   };
+
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={{
-          tabBarStyle: {backgroundColor: '#ffffff'},
+          Style: {
+            backgroundColor: '#ffffff',
+          },
         }}>
         <Tab.Screen
           name="Camera"
@@ -202,6 +207,9 @@ function Login({setScreen}) {
 }
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   const [loggedIn, setLoggedIn] = useState(false);
   const [screen, setScreen] = useState(null);
 
