@@ -16,8 +16,8 @@
 
 - react-native-vision-camera
 
-  - 사진 촬영 및 앨범에 저장
-  - https://github.com/mrousavy/react-native-vision-camera
+  - 사진 촬영<br> - https://github.com/mrousavy/react-native-vision-camera
+  - 저장<br> - https://github.com/react-native-cameraroll/react-native-cameraroll
 
 - firebase
 
