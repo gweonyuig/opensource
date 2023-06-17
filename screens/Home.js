@@ -6,11 +6,16 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Platform,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {Camera, useCameraDevices} from 'react-native-vision-camera';
 
 import {CameraRoll} from '@react-native-camera-roll/camera-roll';
+
+import {launchImageLibrary} from 'react-native-image-picker';
+//import storage from '@react-native-firebase/storage';
+import {storage, uploadImage} from '../src/firebase';
 
 const Home = () => {
   const devices = useCameraDevices();
@@ -18,6 +23,8 @@ const Home = () => {
   const camera = useRef(null);
   const [imageData, setImageData] = useState('');
   const [takePhotoClicked, setTakePhotoClicked] = useState(false);
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   async function hasAndroidPermission() {
     const permission =
@@ -39,6 +46,7 @@ const Home = () => {
       const album = 'Opensource'; // 저장할 앨범의 이름을 설정합니다.
       try {
         await CameraRoll.save(imageData, {album});
+        Alert.alert('사진이 앨범에 저장되었습니다.');
         console.log('이미지가 앨범에 저장되었습니다.');
       } catch (error) {
         console.log('앨범에 저장 중에 오류가 발생했습니다:', error);
@@ -69,6 +77,37 @@ const Home = () => {
       }
     }
   };
+
+  const UploadImage = async () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        maxWidth: 512,
+        maxHeight: 512,
+        includeBase64: Platform.OS === 'android',
+      },
+      async res => {
+        console.log(res);
+        if (res.didCancel) return;
+
+        try {
+          const imageFile = {
+            uri: res.assets[0].uri,
+            type: res.assets[0].type,
+            name: res.assets[0].fileName,
+          };
+
+          await uploadImage(imageFile);
+
+          Alert.alert('사진이 업로드되었습니다.');
+        } catch (error) {
+          console.log(error);
+          Alert.alert('사진 업로드 중 오류가 발생했습니다.');
+        }
+      },
+    );
+  };
+
   return (
     <View style={{flex: 1}}>
       {takePhotoClicked ? (
@@ -95,7 +134,13 @@ const Home = () => {
             }}></TouchableOpacity>
         </View>
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 100,
+          }}>
           {imageData !== '' && (
             <Image
               source={{uri: 'file://' + imageData}}
@@ -114,8 +159,23 @@ const Home = () => {
               marginTop: 5,
             }}
             onPress={() => {
-              saveToAlbum();
               setTakePhotoClicked(true);
+            }}>
+            <Text>Take a photo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              width: '90%',
+              height: 50,
+              borderWidth: 1,
+              alignSelf: 'center',
+              borderRadius: 10,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 5,
+            }}
+            onPress={() => {
+              saveToAlbum();
             }}>
             <Text>Save Photo</Text>
           </TouchableOpacity>
@@ -130,10 +190,8 @@ const Home = () => {
               alignItems: 'center',
               marginTop: 5,
             }}
-            onPress={() => {
-              setTakePhotoClicked(true);
-            }}>
-            <Text>Take a photo</Text>
+            onPress={UploadImage}>
+            <Text>Upload Photo</Text>
           </TouchableOpacity>
         </View>
       )}

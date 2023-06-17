@@ -1,53 +1,231 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  useWindowDimensions,
+  FlatList,
+  ScrollView,
+} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {COLORS, FONTS, SIZES, images} from '../constants';
+import {StatusBar} from 'expo-status-bar';
+import {MaterialIcons} from '@expo/vector-icons';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {photos} from '../constants/data';
+
+const PhotosRoutes = () => (
+  <View style={{flex: 1}}>
+    <FlatList
+      data={photos}
+      numColumns={3}
+      renderItem={({item, index}) => (
+        <View
+          style={{
+            flex: 1,
+            aspectRatio: 1,
+            margin: 3,
+          }}>
+          <Image
+            key={index}
+            source={item}
+            style={{width: '100%', height: '100%', borderRadius: 12}}
+          />
+        </View>
+      )}
+    />
+  </View>
+);
+
+const LikesRoutes = () => (
+  <View
+    style={{
+      flex: 1,
+      backgroundColor: 'blue',
+    }}
+  />
+);
+
+const renderScene = SceneMap({
+  first: PhotosRoutes,
+  second: LikesRoutes,
+});
 
 const Profile = () => {
-  return (
-    <View style={styles.container}>
-      {/* <Image source={require('./assets/profile.jpg')}/> */}
-      <View style={styles.detailContainer}>
-        <Text style={styles.label}>Name</Text>
-        <Text style={[styles.label, styles.info]}>Winifred Asante</Text>
-      </View>
-      <View style={styles.detailContainer}>
-        <Text style={styles.label}>Email</Text>
-        <Text style={[styles.label, styles.info]}>
-          winifredasante15@gmail.com
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+
+  const [routes] = useState([
+    {key: 'first', title: 'Photos'},
+    {key: 'second', title: 'Likes'},
+  ]);
+
+  const renderTabBar = props => (
+    <TabBar
+      {...props}
+      indicatorStyle={{
+        backgroundColor: COLORS.primary,
+      }}
+      style={{
+        backgroundColor: COLORS.white,
+        height: 44,
+      }}
+      renderLabel={({focused, route}) => (
+        <Text style={[{color: focused ? COLORS.black : COLORS.gray}]}>
+          {route.title}
         </Text>
+      )}
+    />
+  );
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: COLORS.white,
+      }}>
+      <StatusBar backgroundColor={COLORS.gray} />
+      <View style={{width: '100%'}}>
+        <Image
+          source={images.cover}
+          resizeMode="cover"
+          style={{
+            height: 228,
+            width: '100%',
+          }}
+        />
       </View>
-      <View style={styles.detailContainer}>
-        <Text style={styles.label}>Gender</Text>
-        <Text style={[styles.label, styles.info]}>Female</Text>
+
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <Image
+          source={images.profile}
+          resizeMode="contain"
+          style={{
+            height: 155,
+            width: 155,
+            borderRadius: 999,
+            borderColor: COLORS.primary,
+            borderWidth: 2,
+            marginTop: -90,
+          }}
+        />
+
+        <Text
+          style={{
+            ...FONTS.h3,
+            color: COLORS.primary,
+            marginVertical: 8,
+          }}>
+          Melissa Peters
+        </Text>
+        <Text
+          style={{
+            color: COLORS.black,
+            ...FONTS.body4,
+          }}>
+          Interior designer
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            marginVertical: 6,
+            alignItems: 'center',
+          }}>
+          <MaterialIcons name="location-on" size={24} color="black" />
+          <Text
+            style={{
+              ...FONTS.body4,
+              marginLeft: 4,
+            }}>
+            Lagos, Nigeria
+          </Text>
+        </View>
+
+        <View
+          style={{
+            paddingVertical: 8,
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginHorizontal: SIZES.padding,
+            }}>
+            <Text
+              style={{
+                ...FONTS.h2,
+                color: COLORS.primary,
+              }}>
+              122
+            </Text>
+            <Text
+              style={{
+                ...FONTS.body4,
+                color: COLORS.primary,
+              }}>
+              Followers
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginHorizontal: SIZES.padding,
+            }}>
+            <Text
+              style={{
+                ...FONTS.h2,
+                color: COLORS.primary,
+              }}>
+              67
+            </Text>
+            <Text
+              style={{
+                ...FONTS.body4,
+                color: COLORS.primary,
+              }}>
+              Followings
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginHorizontal: SIZES.padding,
+            }}>
+            <Text
+              style={{
+                ...FONTS.h2,
+                color: COLORS.primary,
+              }}>
+              77K
+            </Text>
+            <Text
+              style={{
+                ...FONTS.body4,
+                color: COLORS.primary,
+              }}>
+              Likes
+            </Text>
+          </View>
+        </View>
       </View>
-    </View>
+
+      <View style={{flex: 1, marginHorizontal: 22, marginTop: 90}}>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{width: layout.width}}
+          renderTabBar={renderTabBar}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
-export default Profile;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  image: {
-    width: 150,
-    height: 150,
-    marginBottom: 30,
-    alignSelf: 'center',
-    borderRadius: 75,
-    marginTop: 100,
-  },
-  detailContainer: {
-    flexDirection: 'row',
-    marginVertical: 3,
-  },
-  label: {
-    borderColor: 'black',
-    borderWidth: 1,
-    fontSize: 20,
-    flex: 2,
-    paddingHorizontal: 10,
-  },
-  info: {
-    flex: 8,
-  },
-});
+export default Profile;

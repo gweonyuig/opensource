@@ -1,5 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
+import {launchImageLibrary} from 'react-native-image-picker';
 const Map = () => {
   return (
     <View>
