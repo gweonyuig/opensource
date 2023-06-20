@@ -13,7 +13,6 @@
 
 - splashScreen
 
-  - 앱 실행시 로딩화면
   - https://ingg.dev/rn-splash/
 
 - react-native-vision-camera
@@ -28,7 +27,6 @@
   - Storage<br> -사용자 사진 저장
 
 - googleMaps API
-  - googleMaps를 불러와 컴포넌트에서 사용하여 스크린에 출력
   - https://github.com/react-native-maps/react-native-maps
 
 ## 개발 환경
